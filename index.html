@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creative Thinking Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07061a; --panel:#110f2e; --panel2:#18153d; --line:#2a2660; --ink:#ecebff; --mute:#9d9ac9;
+  --gen1:#ff9a3c; --gen2:#ff4d4d;
+  --per1:#f3e55a; --per2:#9be15d;
+  --lim1:#ff6b9a; --lim2:#ff4757;
+  --men1:#e05fd0; --men2:#b04fe0;
+  --pro1:#5ab8ff; --pro2:#3f7bff;
+  --grp1:#7fe3ff; --grp2:#4fb6e0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(1200px 700px at 70% -10%,#231d63 0%,var(--bg) 60%) fixed;color:var(--ink);font-family:Barlow,system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 18px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-family:"Barlow Condensed";font-weight:800;letter-spacing:.5px;margin:0;font-size:34px;line-height:1}
+h1 span{background:linear-gradient(90deg,var(--gen1),var(--lim1),var(--men2),var(--pro1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mute);font-size:14px;margin-top:4px}
+nav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px}
+nav button{background:none;border:0;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--mute)}
+nav button.on{background:var(--panel2);color:var(--ink)}
+section{display:none;margin-top:22px}
+section.on{display:block}
+
+.brief{display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.brief label{font-family:"Barlow Condensed";font-weight:700;letter-spacing:1.5px;font-size:13px;color:var(--mute);white-space:nowrap}
+.brief input{flex:1;background:transparent;border:0;outline:0;color:var(--ink);font-size:16px;min-width:0}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;color:var(--mute)}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.on{color:var(--ink);border-color:currentColor}
+.chip .n{opacity:.6;font-weight:500}
+
+.table{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start}
+@media(max-width:820px){.table{grid-template-columns:1fr}}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.deckpile{position:relative;height:190px;display:flex;justify-content:center;align-items:center}
+.deckpile .c{position:absolute;width:120px;height:165px;border-radius:12px;background:linear-gradient(160deg,#1b1650,#0a0920);border:1px solid #3a347a;box-shadow:0 6px 18px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.deckpile .c:nth-child(1){transform:translate(-6px,6px) rotate(-4deg)}
+.deckpile .c:nth-child(2){transform:translate(-3px,3px) rotate(-2deg)}
+.deckpile.shuf .c:nth-child(1){animation:sh1 .6s}
+.deckpile.shuf .c:nth-child(2){animation:sh2 .6s}
+.deckpile.shuf .c:nth-child(3){animation:sh3 .6s}
+@keyframes sh1{30%{transform:translate(-60px,0) rotate(-12deg)}70%{transform:translate(40px,0) rotate(8deg)}}
+@keyframes sh2{30%{transform:translate(50px,0) rotate(10deg)}70%{transform:translate(-40px,0) rotate(-8deg)}}
+@keyframes sh3{50%{transform:translateY(-14px)}}
+.count{text-align:center;color:var(--mute);font-size:13px}
+.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:600;font-size:15px;background:var(--panel2);border:1px solid var(--line)}
+.btn.primary{background:linear-gradient(90deg,#6a4cff,#c04fe0);border:0;color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:8px}
+.row .btn{flex:1}
+.lbl{font-family:"Barlow Condensed";font-weight:700;letter-spacing:1.5px;font-size:12px;color:var(--mute);margin-bottom:-6px}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{flex:1;background:none;border:0;padding:7px 4px;border-radius:8px;font-size:13px;color:var(--mute)}
+.seg button.on{background:var(--panel2);color:var(--ink)}
+
+.spread{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;min-height:420px;align-items:flex-start}
+.empty{color:var(--mute);text-align:center;padding:60px 20px;max-width:440px;margin:auto;line-height:1.5}
+
+/* Card */
+.card{width:272px;height:384px;perspective:1200px;flex:none}
+.card .in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.card.flipped .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;
+  background:radial-gradient(140px 90px at 25% 30%,rgba(60,50,180,.35),transparent),radial-gradient(160px 80px at 80% 85%,rgba(140,60,200,.35),transparent),linear-gradient(180deg,#0c0a25,#06051a);
+  border:1px solid #2c2766;box-shadow:0 14px 40px rgba(0,0,0,.55)}
+.back{display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:22px}
+.back .cat{font-family:"Barlow Condensed";letter-spacing:4px;font-size:13px;font-weight:600}
+.back .cat.top{transform:rotate(180deg)}
+.front{transform:rotateY(180deg);padding:22px 20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.front .tag{font-family:"Barlow Condensed";letter-spacing:3px;font-size:11px;font-weight:600;opacity:.85;margin-bottom:12px}
+.front .kick{font-family:"Barlow Condensed";font-weight:700;font-size:15px;letter-spacing:.5px;line-height:1}
+.front h3{font-family:"Barlow Condensed";font-weight:800;font-size:30px;line-height:.95;margin:2px 0 14px;text-transform:uppercase}
+.front .txt{font-size:13.5px;line-height:1.42;color:#dcdaf5;overflow:auto}
+.front .txt p{margin:0 0 9px}
+.front .txt b{color:#fff}
+.front .foot{margin-top:auto;padding-top:8px;font-size:11px;color:var(--mute);font-family:"Barlow Condensed";letter-spacing:2px}
+.slot .acts{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.slot .acts button{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12px;color:var(--mute)}
+.card.wrapper{height:auto}
+.slot{display:flex;flex-direction:column;align-items:center}
+.slot .role{font-family:"Barlow Condensed";letter-spacing:2px;font-size:12px;color:var(--mute);margin-bottom:8px;height:14px}
+
+.prompt{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:none}
+.prompt.on{display:block}
+.prompt h4{margin:0 0 6px;font-family:"Barlow Condensed";font-size:18px;letter-spacing:.5px}
+.prompt p{margin:0;color:#cfcdf0;line-height:1.5;font-size:15px}
+
+.work{display:grid;grid-template-columns:1fr 1.3fr;gap:18px;margin-top:18px}
+@media(max-width:820px){.work{grid-template-columns:1fr}}
+.timer{display:flex;flex-direction:column;gap:10px}
+.clock{font-family:"Barlow Condensed";font-weight:700;font-size:56px;text-align:center;letter-spacing:2px;line-height:1}
+.clock.done{color:var(--lim1)}
+.ideas textarea{width:100%;min-height:150px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px;font:15px/1.5 Barlow,sans-serif;resize:vertical}
+.ideas .meta{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin-top:6px;align-items:center}
+.ideas .meta button{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;color:var(--mute);font-size:12px}
+
+/* Browse */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.mini{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;cursor:pointer;transition:transform .15s,border-color .15s}
+.mini:hover{transform:translateY(-2px);border-color:#4a43a0}
+.mini .t{font-family:"Barlow Condensed";font-weight:800;font-size:21px;text-transform:uppercase;line-height:1}
+.mini .k{font-family:"Barlow Condensed";font-size:12px;letter-spacing:2px;margin-bottom:6px}
+.mini .d{color:var(--mute);font-size:13px;margin-top:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.search{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:11px 14px;font-size:15px;outline:0}
+
+.modal{position:fixed;inset:0;background:rgba(3,2,15,.8);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal.on{display:flex}
+
+/* Guide */
+.guide{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.guide{grid-template-columns:1fr}}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.box h2{font-family:"Barlow Condensed";font-size:22px;margin:0 0 10px;letter-spacing:.5px}
+.box ol,.box ul{margin:0;padding-left:20px;line-height:1.6;color:#d6d4f3}
+.box li{margin-bottom:6px}
+.cats{display:flex;flex-direction:column;gap:10px}
+.cats div{display:flex;gap:10px;align-items:baseline}
+.cats b{font-family:"Barlow Condensed";letter-spacing:1.5px;font-size:15px;min-width:150px}
+.cats span{color:#cfcdf0;font-size:14px;line-height:1.45}
+footer{margin-top:40px;color:var(--mute);font-size:12.5px;line-height:1.6;text-align:center}
+footer a{color:var(--pro1)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1><span>Creative Thinking Cards</span></h1>
+    <div class="sub">52 brainstorming tools. Shuffle, draw, and think.</div>
+  </div>
+  <nav>
+    <button data-v="draw" class="on">Draw</button>
+    <button data-v="browse">All cards</button>
+    <button data-v="guide">How to use</button>
+  </nav>
+</header>
+
+<!-- DRAW -->
+<section id="v-draw" class="on">
+  <div class="brief">
+    <label>YOUR BRIEF</label>
+    <input id="brief" placeholder="One sentence: what are you trying to solve or create?" maxlength="200">
+  </div>
+  <div class="chips" id="drawChips"></div>
+
+  <div class="table">
+    <div class="side">
+      <div class="deckpile" id="pile"><div class="c"></div><div class="c"></div><div class="c" id="pileTop"></div></div>
+      <div class="count" id="count"></div>
+      <div class="lbl">DRAW MODE</div>
+      <div class="seg" id="mode">
+        <button data-m="1" class="on">1 card</button>
+        <button data-m="3">3 cards</button>
+        <button data-m="combo">Combo</button>
+      </div>
+      <button class="btn primary" id="drawBtn">Draw</button>
+      <div class="row">
+        <button class="btn" id="shuffleBtn">Shuffle</button>
+        <button class="btn" id="clearBtn">Clear table</button>
+      </div>
+    </div>
+    <div>
+      <div class="spread" id="spread">
+        <div class="empty" id="empty">Write your brief above, pick categories (or leave all on), then draw. Cards come off a shuffled deck without repeats until you reshuffle.</div>
+      </div>
+      <div class="prompt" id="prompt"><h4 id="promptH"></h4><p id="promptP"></p></div>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="box timer">
+      <h2 style="margin:0">Timer</h2>
+      <div class="clock" id="clock">10:00</div>
+      <div class="seg" id="tset">
+        <button data-s="180">3 min</button>
+        <button data-s="300">5 min</button>
+        <button data-s="600" class="on">10 min</button>
+        <button data-s="1200">20 min</button>
+      </div>
+      <div class="row"><button class="btn primary" id="tGo">Start</button><button class="btn" id="tReset">Reset</button></div>
+    </div>
+    <div class="box ideas">
+      <h2 style="margin:0 0 8px">Ideas</h2>
+      <textarea id="ideas" placeholder="One idea per line. Don't judge yet; volume first."></textarea>
+      <div class="meta"><span id="icount">0 ideas</span><span><button id="copyIdeas">Copy</button> <button id="clrIdeas">Clear</button></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSE -->
+<section id="v-browse">
+  <input class="search" id="q" placeholder="Search cards">
+  <div class="chips" id="browseChips"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- GUIDE -->
+<section id="v-guide">
+  <div class="guide">
+    <div class="box">
+      <h2>Running a session</h2>
+      <ol>
+        <li><b>Write the brief first.</b> One clear sentence naming the objective. A vague brief does not "open up" creativity; it scatters it.</li>
+        <li><b>Draw a card.</b> Use all categories for a random jolt, or narrow to the categories that fit where you are in the process.</li>
+        <li><b>Set the timer and apply the card literally.</b> Do exactly what the card says, against your brief, until the timer runs out. Five to ten minutes per card works well.</li>
+        <li><b>Capture everything.</b> One idea per line in the Ideas box. Quantity over quality; no editing while generating.</li>
+        <li><b>Draw again, or combine.</b> Use Combo mode to collide two different kinds of thinking on the same brief.</li>
+        <li><b>Converge last.</b> Only after generating, switch to critique: pick the strongest few, then use a Limitation or Mental Model card to test them.</li>
+      </ol>
+    </div>
+    <div class="box">
+      <h2>The six suits</h2>
+      <div class="cats" id="catGuide"></div>
+    </div>
+    <div class="box">
+      <h2>Draw modes</h2>
+      <ul>
+        <li><b>1 card:</b> a single prompt to work on. Best for solo, timed sprints.</li>
+        <li><b>3 cards:</b> a spread read as Warm up, Shift, Push. Work them in order, one timer each.</li>
+        <li><b>Combo:</b> two cards from two different suits. Apply both at once (for example, Imagine You're the Devil + Five Whys).</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Using it with a group</h2>
+      <ul>
+        <li>Draw from <b>In Groups</b> first to choose the session format (Brain Writing, Step Ladder, Anonypost).</li>
+        <li>Then draw content cards from the other suits and put one on screen for everyone.</li>
+        <li>Generate individually before sharing, so the loudest voice doesn't set the direction.</li>
+        <li>Evaluate ideas anonymously, ideally by someone outside the group.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Card content: <b>Creative Thinking Tools</b> by School of Thought (<a href="https://schoolofthought.org" target="_blank" rel="noopener">schoolofthought.org</a>), created by Jesse Richardson, published under
+  <a href="https://creativecommons.org/licenses/by-nc/3.0/" target="_blank" rel="noopener">Creative Commons BY-NC 3.0</a>. Transcribed for non-commercial use; layout and session guide added.
+</footer>
+</div>
+
+<div class="modal" id="modal"><div id="modalCard"></div></div>
+
+<script>
+const CATS = {
+  gen:{name:"Generation",c1:"var(--gen1)",c2:"var(--gen2)",desc:"Produce volume. Get ideas out fast before your inner critic wakes up."},
+  per:{name:"Perspective Shifts",c1:"var(--per1)",c2:"var(--per2)",desc:"Step into someone else's head or another context to see the problem differently."},
+  lim:{name:"Limitation",c1:"var(--lim1)",c2:"var(--lim2)",desc:"Define and constrain. Clear boundaries make better ideas."},
+  men:{name:"Mental Models",c1:"var(--men1)",c2:"var(--men2)",desc:"Apply proven thinking frameworks to sharpen or test ideas."},
+  pro:{name:"Provocation",c1:"var(--pro1)",c2:"var(--pro2)",desc:"Jolt the process with a structured technique or a change of conditions."},
+  grp:{name:"In Groups",c1:"var(--grp1)",c2:"var(--grp2)",desc:"Formats for running group sessions without groupthink."}
+};
+const C = (cat,title,txt,kick)=>({cat,title,txt,kick:kick||""});
+const IY = "Imagine you're";
+const CARDS = [
+C("gen","10 Ideas in 10 Minutes",["Force your internal critic to shut up by generating as many ideas as possible. Quantity over quality will help your mind to expand rather than contract.","Set a stopwatch for 10 minutes to write down 10 ideas. Importantly, they don't have to be good ideas."]),
+C("gen","Draw on Inspiration",["Instead of writing ideas, simply start sketching relevant concepts.","By activating your visual cortex you'll open up new ways to think about things.","Don't try to solve the problem right away, just start moving the pencil."]),
+C("gen","Shower Thoughts",["The reason we have great ideas in the shower is that we're not doing anything else.","Use your time in the shower, on the train, during your run, or meditating in a sensory deprivation chamber to consider the brief."]),
+C("gen","101 Ideas",["Give yourself or your team a deadline to compile 101 ideas in a list.","By having so many ideas you give yourself permission to have more bad ideas, which in turn opens you up to more good ideas."]),
+C("gen","Go Slow",["Immerse yourself in research and visual references, then let your subconscious go to work.","Sleep on it and give your mind time to synthesize.","Try this before you start and/or between sessions."]),
+C("gen","Meta Sequence",["<b>Deep: Research &amp; Define</b><br>Deep dive and define the objective","<b>Wide: Creative &amp; Divergent</b><br>Think openly, play, and minimize criticism","<b>Narrow: Critical &amp; Convergent</b><br>Use objective evaluation criteria and critique","<b>Up: Synthesise &amp; Iterate</b><br>Keep playing to find a deeper synthesis"]),
+C("gen","Tricktionary",["Use random stimuli like reading out words from the dictionary to provoke a response, or try using the last letter of one word as the starting letter for another word.","Free-associate words and concepts to spark connections."]),
+C("gen","Mind Map",["Write your objective in a bubble in the middle of the page and branch out nested and associated ideas to discover new perspectives as stimuli.","Try putting your mind map on the wall while brainstorming."]),
+
+C("per","Inversion",["By flipping the perspective you can open up new insights.","What's the opposite of the problem or solution? What would be the worst idea? Who isn't the target audience?"]),
+C("per","Recontext",["How would you solve the problem in the future or past? What about a different cultural context?","Try 5 ideas in 5 minutes to generate different perspectives then pick two or three to ideate from."]),
+C("per","No Limits",["Removing limitations means removing assumptions, which can result in novel perspectives and solutions.","Imagine you have unlimited superpowers, budget, time, or technological capability to solve the problem. What would a god do?"]),
+C("per","Extremify",["Looking at extremes can bring insights into sharp relief.","What would happen if you amplified the problem or solution? What if it was minuscule or all-consuming; what would a global response look like?"]),
+C("per","Challenge",["Creative breakthroughs often arise from challenging conventions.","What assumptions have already been made? Could they be wrong, or shifted? What if the brief is too narrow? Too wide? Pretend to be your competitor."]),
+C("per","The Devil",["What would someone ruthless do? How could you use mischief to disrupt the situation?","What if we broke some stuff? How might someone evil exploit you?"],IY),
+C("per","The Customer",["What does a day in the life of your target audience look like? What are their fears and aspirations?","What might they not understand? What might we not understand about them?"],IY),
+C("per","The Sage",["Take on the persona of an oracle.","Why are we really doing this? What's the true insight and purpose of this project? Is there a deeper truth? What would someone truly wise do?"],IY),
+C("per","The Explorer",["How can we break new ground? Are we thinking too locally?","If we could rewrite the rules, what would we do differently? How might someone from a different culture approach this?"],IY),
+C("per","The Innocent",["What would you think if you knew nothing about this? How might a child interpret the problem or solution?","What's the obvious solution and why is it good or bad?"],IY),
+C("per","The Joker",["Imagine you're a famous comedian who fits the tone of the brief. What would they joke about?","What's an irreverent insight? Is there an elephant in the room that needs to be outed?"],IY),
+C("per","The Ruler",["What would you do if you were the boss, a wealthy investor, or someone with absolute power?","If you already had the support of everyone, how might you do things differently? What might a judicious leader suggest?"],IY),
+C("per","An Alien",["What would an alien make of this brief? By writing from the perspective of an extraterrestrial we can discover insights and assumptions to help us think in a more 'first principles' way.","Check out the Strange Planet comics online for inspiration for alien perspectives."],IY),
+C("per","The Disruptor",["Pretend you're an entrepreneur who is aiming to shake up the industry or status quo with a new vision for what might be.","What would a disruptor do to challenge the existing order with a new take on things? How could you forge a new path?"],IY),
+C("per","The Artist",["How might different kinds of artists interpret this problem?","Brainstorm from the perspective of a visual artist, thespian, fashion designer, advertising creative, product designer, UX designer, or poet."],IY),
+C("per","Another's Shoes",["Meta-brainstorm different perspectives and archetypes that might be relevant for your particular situation.","For example, if you have a marketing problem you might suggest different kinds of customers and business stakeholders. Then generate ideas from their perspectives."]),
+
+C("lim","Clear Brief",["Failing to provide a clear and compelling brief does not, contrary to popular opinion, 'open up' creativity.","Use the briefing template at schoolofthought.org/brief or at least provide a clear objective in the form of a single simple sentence."],"Write a"),
+
+C("men","The Pareto Principle",["About 80% of the output tends to come from 20% of the input.","How might we optimise by focussing on the most relevant factors?","How can we design for the primary audience or most valuable outcome?"]),
+C("men","First Principles",["Define the base principles to reason more clearly. Question what's actually fundamental to bring the problem (and solution) into sharper relief.","What unnecessary assumptions are being made? What if we had to make everything from scratch?"]),
+C("men","Social Proof",["As tribal creatures, we want validation before we act.","How can we create and communicate social buy-in? Could the crowd itself contribute in some way? Is there a way to provide a social feedback loop, testimonials, or other social validation?"]),
+C("men","Critical Mass",["A critical mass is a self-sustaining chain reaction.","What could we do to create a viral effect whereby the idea spreads itself?","How might we make it remarkable or useful enough to become its own amplifier?"]),
+C("men","Scarcity",["We value things that are in short supply.","Is there a way to create demand or at least the perception of it? How might limitations be beneficial?","If there isn't a ready-made market or audience can we create one?"]),
+C("men","The Third Story",["Consider the impartial perspective.","We're often blind to our own assumptions, and our perceptions are colored by our insider understanding.","What might someone with no knowledge or bias think?"]),
+C("men","Second Order Thinking",["Consider the flow-on effects: what might the consequences of the problem or solution entail?","What are the variables at play? How might the family of your target audience react?","How could time, complications, or feedback loops have influence?"]),
+
+C("pro","Future News",["Pretend you've already achieved success. What would the newspaper headline or article say? This will spur you to think of big, newsworthy ideas.","Explaining how and why it worked so well forces you to consider the steps to success."]),
+C("pro","Minimum Viable Idea",["The creative process is iterative, and by getting to the minimum it can open us up to pivot in relevant and interesting ways.","What's the minimum needed to achieve the objective? What's the most efficient, quickest, and cheapest option you can think of?"]),
+C("pro","Five Whys",["This technique is often used to get to the root of a problem, but it can also discover insights that lead to innovative thinking.","Start with a problem or solution, then keep asking 'why?' to see where it leads you."]),
+C("pro","Journey Map",["Write your problem or starting point at one end and the ideal outcome at the other.","Now fill in the gaps to map out what needs to happen to bring your objective into reality. What steps will need to occur? How might they influence each other?"]),
+C("pro","What If?",["Simply starting the thinking process with 'What if?' can elicit a creative response.","Try saying it out loud or writing it down several times in a list to hack your brain to think differently.","Build upon other ideas by challenging them with 'what if' scenarios."]),
+C("pro","SWOT Now",["Create four quadrants and list Strengths, Weaknesses, Opportunities and Threats. S&amp;W relate to internal factors while O&amp;T tend to relate to external aspects.","SWOT analyses are usually used for strategic evaluation, but they can also be used to provoke new ideas."]),
+C("pro","Change of Scene",["Go outside, to a bar for a few drinks, or to the top of a mountain and see how the change of environment changes your perspective.","Many people find walking helpful for ideation and stimulus."]),
+C("pro","Will It Blend",["How could you combine two or more ideas, techniques, aspects, solutions, or problems?","Try writing relevant keywords or ideas down on bits of paper then mashing them up randomly."]),
+C("pro","See Inspiration",["Use the room you're in as a visual inspiration canvas by finding references to print and put up on the walls, along with your rough concepts, sketches, headlines, and so on.","Try some image searches for related ideas and save the ones you like as stimuli."]),
+C("pro","Reverse Brainstorming",["Instead of solutions, brainstorm to generate problems.","What other issues might need solving? Will there be flow-on effects that require different solutions? What's a different way of thinking about the problem space?"]),
+C("pro","Starburst Questions",["Create a mind map star with six points for each of the classic analysis questions: Who, what, when, where, why, and how.","Note that the 'why' is the most likely to provide relevant insight, and that the 'how' can sometimes be a distraction."]),
+
+C("grp","yourbias.is",["Group brainstorming is often affected by social factors and confident voices thwarting more considered thinking.","Familiarize yourself with common cognitive biases that can affect decision making, evaluation, and group dynamics at yourbias.is"]),
+C("grp","Brain Writing",["Everyone writes an idea on a piece of paper.","Pass your piece of paper clockwise, the next person builds on the idea.","Repeat until everyone has contributed to each other's ideas."]),
+C("grp","Vote No to Bias",["Our judgments are invariably shaped by our personal biases.","So, it's best to have discerning independent third parties evaluate anonymised ideas rather than a group vote."]),
+C("grp","Diverse Inputs",["Creative insights often arise from novel perspectives, so try to facilitate diverse group dynamics e.g. put engineers with designers, management with front-line staff, and so on."]),
+C("grp","Step Ladder",["Everyone brainstorms individually. The first two people present ideas to each other.","A third person is invited into the room to present their ideas. Repeat until everyone has presented unaffected by others' ideas.","Finally, recap all ideas for the group."]),
+C("grp","Heads in the Cloud",["Rather than verbal collaboration, use a cloud-based service like Google Docs with open sharing permissions so everyone can anonymously collaborate, comment, and build on each other's ideas.","Create a copy of the doc at schoolofthought.org/cloud"]),
+C("grp","Anonypost",["Each person writes or draws a single idea per sticky note and puts it up on the wall in a separate room.","Take turns nominating your favorite idea that wasn't your own (and hasn't yet been nominated) and explain why."]),
+C("grp","Role Up",["Give each person in the group a role to play such as the customer, the rebel, the narrator, the joker, the sage, the CEO, the shareholder, the lunatic, etc.","Then give a scenario involving the product, problem, or situation to role play."]),
+C("grp","Concept Wall",["To start your collaborative brainstorming session, everyone writes or draws a few key concepts relating to the subject matter on sticky notes.","Then put them up on the wall as stimulus for further brainstorming."])
+];
+CARDS.forEach((c,i)=>c.id=i);
+
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem("ctc_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("ctc_"+k,JSON.stringify(v))}catch(e){}}};
+
+/* nav */
+function show(v){$$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));$$("section").forEach(s=>s.classList.toggle("on",s.id==="v-"+v));}
+$$("nav button").forEach(b=>b.onclick=()=>{show(b.dataset.v);try{history.replaceState(null,"","#"+b.dataset.v)}catch(e){location.hash=b.dataset.v}});
+const h=location.hash.slice(1); if(["draw","browse","guide"].includes(h)) show(h);
+
+/* chips */
+function chipRow(el,sel,onChange){
+  el.innerHTML="";
+  Object.entries(CATS).forEach(([k,c])=>{
+    const n=CARDS.filter(x=>x.cat===k).length;
+    const b=document.createElement("button");b.className="chip"+(sel.has(k)?" on":"");
+    b.style.color=sel.has(k)?c.c1:"";
+    b.innerHTML=`<i style="background:linear-gradient(135deg,${c.c1},${c.c2})"></i>${c.name} <span class="n">${n}</span>`;
+    b.onclick=()=>{ if(sel.has(k)){ if(sel.size>1) sel.delete(k);} else sel.add(k); chipRow(el,sel,onChange); onChange(); };
+    el.appendChild(b);
+  });
+  const all=document.createElement("button");all.className="chip";all.textContent="All";
+  all.onclick=()=>{Object.keys(CATS).forEach(k=>sel.add(k));chipRow(el,sel,onChange);onChange();};
+  el.appendChild(all);
+}
+
+/* deck */
+const drawSel=new Set(store.get("cats",Object.keys(CATS)));
+let deck=[], mode="1";
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rebuild(anim){
+  deck=shuffle(CARDS.filter(c=>drawSel.has(c.cat)).map(c=>c.id));
+  if(anim){const p=$("#pile");p.classList.remove("shuf");void p.offsetWidth;p.classList.add("shuf");}
+  updCount();
+}
+function updCount(){
+  const tot=CARDS.filter(c=>drawSel.has(c.cat)).length;
+  $("#count").textContent=`${deck.length} of ${tot} cards left in deck`;
+  $("#drawBtn").textContent=deck.length?"Draw":"Deck empty: shuffle";
+}
+chipRow($("#drawChips"),drawSel,()=>{store.set("cats",[...drawSel]);rebuild(true)});
+$("#pileTop").innerHTML=brainSVG("#9b7bff","#ff5fa2",46);
+
+function brainSVG(a,b,s){
+  const id="g"+Math.random().toString(36).slice(2,7);
+  return `<svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none" stroke="url(#${id})" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs>
+  <path d="M20 36c-6 0-10-4-10-9 0-4 3-7 6-8 0-5 4-9 9-9 2-3 5-4 8-4s6 1 8 4c5 0 9 4 9 9 3 1 6 4 6 8 0 5-4 9-10 9"/>
+  <path d="M25 14c0 4 3 6 6 6M40 14c-1 3 0 6 3 7M16 27c3 0 5 2 6 4M48 27c-3 0-5 2-6 4M32 20v6"/>
+  <path d="M34 30l-5 9h7l-5 10"/><path d="M22 42l-2 5M44 42l-2 5M26 50l-1 3M41 50l-1 3"/></svg>`;
+}
+function cssVar(v){return getComputedStyle(document.documentElement).getPropertyValue(v.replace(/var\((.*)\)/,"$1")).trim()}
+
+function cardEl(c,opts={}){
+  const k=CATS[c.cat], c1=cssVar(k.c1), c2=cssVar(k.c2);
+  const wrap=document.createElement("div");wrap.className="slot";
+  wrap.innerHTML=`<div class="role">${opts.role||""}</div>
+  <div class="card${opts.flipped?" flipped":""}"><div class="in">
+    <div class="face back"><div class="cat top" style="color:${c1}">${k.name.toUpperCase()}</div>${brainSVG(c1,c2,78)}<div class="cat" style="color:${c1}">${k.name.toUpperCase()}</div></div>
+    <div class="face front">
+      <div class="tag" style="color:${c1}">${k.name.toUpperCase()}</div>
+      ${c.kick?`<div class="kick" style="color:${c1}">${c.kick.toUpperCase()}</div>`:""}
+      <h3 style="background:linear-gradient(90deg,${c1},${c2});-webkit-background-clip:text;background-clip:text;color:transparent">${c.title}</h3>
+      <div class="txt">${c.txt.map(p=>`<p>${p}</p>`).join("")}</div>
+      <div class="foot">${c.id+1} / 52</div>
+    </div>
+  </div></div>
+  ${opts.acts?`<div class="acts"><button data-a="swap">Swap</button><button data-a="flip">Flip</button></div>`:""}`;
+  const card=wrap.querySelector(".card");
+  card.onclick=()=>card.classList.toggle("flipped");
+  if(opts.acts){
+    wrap.querySelector('[data-a="flip"]').onclick=e=>{e.stopPropagation();card.classList.toggle("flipped")};
+    wrap.querySelector('[data-a="swap"]').onclick=e=>{e.stopPropagation();opts.onSwap&&opts.onSwap(wrap)};
+  }
+  return wrap;
+}
+
+function take(filterFn){
+  const i=deck.findIndex(id=>!filterFn||filterFn(CARDS[id]));
+  if(i<0) return null;
+  return CARDS[deck.splice(i,1)[0]];
+}
+let onTable=[];
+function place(cards,roles){
+  const sp=$("#spread");sp.innerHTML="";onTable=cards;
+  cards.forEach((c,i)=>{
+    const el=cardEl(c,{role:roles?roles[i]:"",acts:true,onSwap:(w)=>{
+      const n=take(x=>x.cat===c.cat&&!onTable.includes(x))||take(x=>!onTable.includes(x));
+      if(!n){flash("No cards left to swap in. Shuffle first.");return;}
+      onTable[i]=n; place(onTable,roles);
+      setTimeout(()=>sp.children[i].querySelector(".card").classList.add("flipped"),60);
+      updCount();setPrompt();
+    }});
+    sp.appendChild(el);
+    setTimeout(()=>el.querySelector(".card").classList.add("flipped"),250+i*220);
+  });
+  setPrompt(roles);
+}
+let lastRoles=null;
+function setPrompt(roles){
+  if(roles!==undefined) lastRoles=roles;
+  const brief=$("#brief").value.trim(), b=brief?`"${brief}"`:"your brief";
+  const p=$("#prompt");
+  if(!onTable.length){p.classList.remove("on");return;}
+  p.classList.add("on");
+  let H,P;
+  if(mode==="combo"&&onTable.length===2){
+    H="Collide the two cards";
+    P=`Apply ${onTable[0].title} and ${onTable[1].title} to ${b} at the same time. Start the timer and list every idea that comes from the overlap, however odd. Then pick the two you'd defend.`;
+  } else if(onTable.length===3){
+    H="Work the spread in order";
+    P=`Spend one timer on each card against ${b}. Warm up with ${onTable[0].title}, shift with ${onTable[1].title}, then push with ${onTable[2].title}. Keep adding to the same idea list; don't edit between rounds.`;
+  } else {
+    H="Your move";
+    P=`Do exactly what ${onTable[0].title} says, applied to ${b}. Start the timer, write one idea per line, and don't judge anything until the clock stops.`;
+  }
+  $("#promptH").textContent=H;$("#promptP").textContent=P;
+}
+let flashT;
+function flash(msg){$("#count").textContent=msg;clearTimeout(flashT);flashT=setTimeout(updCount,2200)}
+
+$("#drawBtn").onclick=()=>{
+  if(!deck.length){rebuild(true);return;}
+  $("#empty")&&$("#empty").remove();
+  if(mode==="1"){const c=take();place([c]);}
+  else if(mode==="3"){
+    const out=[];for(let i=0;i<3;i++){const c=take();if(c)out.push(c);}
+    if(out.length<3){flash("Not enough cards left; shuffle to refill.");out.forEach(c=>deck.push(c.id));return;}
+    place(out,["WARM UP","SHIFT","PUSH"]);
+  } else {
+    const a=take(); if(!a){flash("Deck empty.");return;}
+    const b=take(x=>x.cat!==a.cat);
+    if(!b){deck.unshift(a.id);flash(drawSel.size<2?"Combo needs at least two categories selected.":"No second suit left; shuffle.");return;}
+    place([a,b],[CATS[a.cat].name.toUpperCase(),CATS[b.cat].name.toUpperCase()]);
+  }
+  updCount();
+};
+$("#shuffleBtn").onclick=()=>rebuild(true);
+$("#clearBtn").onclick=()=>{onTable=[];$("#spread").innerHTML='<div class="empty">Table cleared. Draw again when ready.</div>';setPrompt()};
+$$("#mode button").forEach(b=>b.onclick=()=>{mode=b.dataset.m;$$("#mode button").forEach(x=>x.classList.toggle("on",x===b))});
+
+/* brief + ideas */
+$("#brief").value=store.get("brief","");
+$("#brief").oninput=()=>{store.set("brief",$("#brief").value);setPrompt()};
+const ideas=$("#ideas");ideas.value=store.get("ideas","");
+function cntIdeas(){const n=ideas.value.split("\n").filter(l=>l.trim()).length;$("#icount").textContent=n+(n===1?" idea":" ideas")}
+ideas.oninput=()=>{store.set("ideas",ideas.value);cntIdeas()};cntIdeas();
+$("#clrIdeas").onclick=()=>{if($("#clrIdeas").dataset.c){ideas.value="";store.set("ideas","");cntIdeas();$("#clrIdeas").textContent="Clear";delete $("#clrIdeas").dataset.c}else{$("#clrIdeas").textContent="Sure?";$("#clrIdeas").dataset.c=1;setTimeout(()=>{$("#clrIdeas").textContent="Clear";delete $("#clrIdeas").dataset.c},2500)}};
+$("#copyIdeas").onclick=async()=>{try{await navigator.clipboard.writeText(($("#brief").value?("Brief: "+$("#brief").value+"\n\n"):"")+ideas.value);$("#copyIdeas").textContent="Copied"}catch(e){ideas.select();$("#copyIdeas").textContent="Selected"}setTimeout(()=>$("#copyIdeas").textContent="Copy",1500)};
+
+/* timer */
+let tLen=600,tLeft=600,tInt=null;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function tDraw(){$("#clock").textContent=fmt(tLeft);$("#clock").classList.toggle("done",tLeft===0)}
+function tStop(){clearInterval(tInt);tInt=null;$("#tGo").textContent=tLeft===tLen?"Start":"Resume"}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();[0,.25,.5].forEach(t=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=880;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.15,a.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+t+.2);o.start(a.currentTime+t);o.stop(a.currentTime+t+.2)})}catch(e){}}
+$("#tGo").onclick=()=>{
+  if(tInt){tStop();return;}
+  if(tLeft===0)tLeft=tLen;
+  $("#tGo").textContent="Pause";
+  tInt=setInterval(()=>{tLeft--;tDraw();if(tLeft<=0){tLeft=0;tDraw();tStop();$("#tGo").textContent="Restart";beep()}},1000);
+};
+$("#tReset").onclick=()=>{tStop();tLeft=tLen;tDraw();$("#tGo").textContent="Start"};
+$$("#tset button").forEach(b=>b.onclick=()=>{$$("#tset button").forEach(x=>x.classList.toggle("on",x===b));tLen=+b.dataset.s;tStop();tLeft=tLen;tDraw();$("#tGo").textContent="Start"});
+
+/* browse */
+const brSel=new Set(Object.keys(CATS));
+function renderGrid(){
+  const q=$("#q").value.toLowerCase().trim();
+  const g=$("#grid");g.innerHTML="";
+  CARDS.filter(c=>brSel.has(c.cat)&&(!q||(c.kick+" "+c.title+" "+c.txt.join(" ")).toLowerCase().includes(q))).forEach(c=>{
+    const k=CATS[c.cat],c1=cssVar(k.c1);
+    const d=document.createElement("button");d.className="mini";
+    d.innerHTML=`<div class="k" style="color:${c1}">${k.name.toUpperCase()}</div><div class="t" style="color:${c1}">${c.kick?c.kick+" ":""}${c.title}</div><div class="d">${c.txt[0].replace(/<[^>]+>/g," ")}</div>`;
+    d.onclick=()=>openModal(c);
+    g.appendChild(d);
+  });
+  if(!g.children.length) g.innerHTML='<div class="empty">No cards match.</div>';
+}
+chipRow($("#browseChips"),brSel,renderGrid);
+$("#q").oninput=renderGrid;renderGrid();
+function openModal(c){
+  const m=$("#modal"),box=$("#modalCard");box.innerHTML="";
+  box.appendChild(cardEl(c,{flipped:true}));
+  m.classList.add("on");
+}
+$("#modal").onclick=e=>{if(e.target.id==="modal")$("#modal").classList.remove("on")};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#modal").classList.remove("on")});
+
+/* guide */
+$("#catGuide").innerHTML=Object.values(CATS).map(c=>`<div><b style="color:${cssVar(c.c1)}">${c.name.toUpperCase()}</b><span>${c.desc}</span></div>`).join("");
+
+rebuild(false);
+</script>
+</body>
+</html>
